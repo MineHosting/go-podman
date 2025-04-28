@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+SOCKET_PATH="/run/user/$(id -u)/podman/podman.sock"
+
+test_podman_endpoint() {
+  local endpoint=$1
+  echo "🔍 Testing endpoint: $endpoint"
+
+  response=$(curl -s --unix-socket "$SOCKET_PATH" "http://localhost/v5.4.2$endpoint")
+
+  if [[ $? -ne 0 ]]; then
+    echo "❎ Failed to communicate with Podman service. Check if the daemon is running"
+    exit 1
+  fi
+
+  echo "$response" | jq . >/dev/null 2>&1
+
+  if [[ $? -ne 0 ]]; then
+    echo "❎ Failed to parse response with jq. Invalid or empty json"
+    echo "📪 Raw response could not be parsed with jq ."
+    exit 1
+  fi
+
+  echo "$response" | jq .
+  echo "$response" | xclip -selection clipboard
+}
+
+ARGUMENTS="$@"
+
+if [ -z "$ARGUMENTS" ]; then
+  echo "❎ We need arguments to test endpoints"
+  exit 1
+fi
+
+test_podman_endpoint "$ARGUMENTS"
