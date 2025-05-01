@@ -8,7 +8,9 @@ import (
 	"io"
 )
 
-func SerializePayload(payload any) (io.Reader, error) {
+type RealPayloadSerializer struct{}
+
+func (r *RealPayloadSerializer) SerializePayload(payload any) (io.Reader, error) {
 	if payload == nil {
 		return nil, nil
 	}
