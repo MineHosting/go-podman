@@ -12,7 +12,7 @@ Go Podman acts as a minimal abstraction layer over Podman's REST API, allowing d
 
 - **Manage containers in code**, without relying on CLI tools or shell scripts.
 - **Automate complex workflows**, turning infrastructure logic into reproducible and testable Go functions.
-- **Build custom orchestrators**, ephemeral enviroments, or internal tooling with fine-grained control.
+- **Build custom orchestrators**, ephemeral environments, or internal tooling with fine-grained control.
 
 ---
 
@@ -21,7 +21,7 @@ Go Podman acts as a minimal abstraction layer over Podman's REST API, allowing d
 This project is guided by the following principles:
 
 - **Simplicity** - Keep it small, composable, and easy to understand.
-- **Modularity** - Each component is isolated and follow the Single Responsibility Principle
+- **Modularity** - Each component is isolated and follows the Single Responsibility Principle
 - **Extensibility** -  You can use individual building blocks or combine them for more complex solutions
 
 ---

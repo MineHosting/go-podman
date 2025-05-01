@@ -9,18 +9,21 @@ import (
 )
 
 func SendRequest(method, url string, body any, socketPath string) ([]byte, error) {
-	serializedBody, err := network.SerializePayload(body)
+	serializer := &network.RealPayloadSerializer{}
+	serializedBody, err := serializer.SerializePayload(body)
 	if err != nil {
 		return nil, fmt.Errorf("[Socket]: failed to serialize payload: %w", err)
 	}
 
-	req, err := network.NewRequest(method, url, serializedBody)
+	requestBuilder := &network.RealHTTPRequestBuilder{}
+	req, err := requestBuilder.NewRequest(method, url, serializedBody)
 	if err != nil {
 		return nil, fmt.Errorf("[Socket]: failed to create request: %w", err)
 	}
 
+	transportCreator := &network.RealTransportCreator{}
 	client := &http.Client{
-		Transport: network.NewUnixTransport(socketPath),
+		Transport: transportCreator.NewUnixTransport(socketPath),
 	}
 
 	resp, err := client.Do(req)
@@ -30,12 +33,14 @@ func SendRequest(method, url string, body any, socketPath string) ([]byte, error
 
 	defer resp.Body.Close()
 
-	bodyResp, err := network.ReadBody(resp)
+	responseReader := &network.RealResponseReader{}
+	bodyResp, err := responseReader.ReadBody(resp)
 	if err != nil {
 		return nil, fmt.Errorf("[Socket]: failed to read response body: %w", err)
 	}
 
-	err = network.ValidateStatus(resp, bodyResp)
+	responseValidator := &network.RealResponseValidator{}
+	err = responseValidator.ValidateStatus(resp, bodyResp)
 	if err != nil {
 		return nil, fmt.Errorf("[Network]: invalid response: %w", err)
 	}
