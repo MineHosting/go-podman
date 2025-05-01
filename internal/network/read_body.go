@@ -7,7 +7,9 @@ import (
 	"net/http"
 )
 
-func ReadBody(resp *http.Response) ([]byte, error) {
+type RealResponseReader struct{}
+
+func (r *RealResponseReader) ReadBody(resp *http.Response) ([]byte, error) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
