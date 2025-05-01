@@ -8,7 +8,9 @@ import (
 	"time"
 )
 
-func NewUnixTransport(socketPath string) http.RoundTripper {
+type RealTransportCreator struct{}
+
+func (r *RealTransportCreator) NewUnixTransport(socketPath string) http.RoundTripper {
 	return &http.Transport{
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
 			return net.Dial("unix", socketPath)
