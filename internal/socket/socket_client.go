@@ -9,8 +9,9 @@ import (
 	"github.com/MineHosting/go-podman/internal/structures/network"
 )
 
+var _ SocketClientInterface = (*SocketClient)(nil)
+
 type SocketClient struct {
-	Socket            SocketPath
 	Serializer        network.PayloadSerializer
 	RequestBuilder    network.HTTPRequestBuilder
 	ResponseReader    network.ResponseReader
@@ -18,9 +19,8 @@ type SocketClient struct {
 	NetworkTransport  network.TransportCreator
 }
 
-func NewSocketClient(Serializer network.PayloadSerializer, Request network.HTTPRequestBuilder, Response network.ResponseReader, Validator network.ResponseValidator, Transport network.TransportCreator, Socket SocketPath) *SocketClient {
+func NewSocketClient(Serializer network.PayloadSerializer, Request network.HTTPRequestBuilder, Response network.ResponseReader, Validator network.ResponseValidator, Transport network.TransportCreator) *SocketClient {
 	return &SocketClient{
-		Socket:            Socket,
 		Serializer:        Serializer,
 		RequestBuilder:    Request,
 		ResponseReader:    Response,
@@ -29,7 +29,7 @@ func NewSocketClient(Serializer network.PayloadSerializer, Request network.HTTPR
 	}
 }
 
-func (SC *SocketClient) Send(method, url string, body io.Reader) ([]byte, error) {
+func (SC *SocketClient) Send(method, url string, body io.Reader, socket SocketPath) ([]byte, error) {
 	injectedUrl := fmt.Sprintf("http://d/%s", url)
 	req, err := SC.RequestBuilder.NewRequest(method, injectedUrl, body)
 	if err != nil {
@@ -37,7 +37,7 @@ func (SC *SocketClient) Send(method, url string, body io.Reader) ([]byte, error)
 	}
 
 	client := &http.Client{
-		Transport: SC.NetworkTransport.NewUnixTransport(string(SC.Socket)),
+		Transport: SC.NetworkTransport.NewUnixTransport(string(socket)),
 	}
 
 	resp, err := client.Do(req)
