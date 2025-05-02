@@ -6,29 +6,21 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/MineHosting/go-podman/internal/network"
 	"github.com/MineHosting/go-podman/internal/socket"
 )
 
 type PodmanClient struct {
 	ApiVersion string
 
-	socketType   socket.SocketPath
-	socketClient socket.SocketClient
+	SocketType   socket.SocketPath
+	SocketClient socket.SocketClientInterface
 }
 
-func NewPodmanClient(st socket.SocketPath) *PodmanClient {
+func NewPodmanClient(st socket.SocketPath, sc socket.SocketClientInterface) *PodmanClient {
 	return &PodmanClient{
-		ApiVersion: "v1.0.0",
-		socketType: st,
-		socketClient: socket.SocketClient{
-			Socket:            st,
-			Serializer:        &network.RealPayloadSerializer{},
-			RequestBuilder:    &network.RealHTTPRequestBuilder{},
-			ResponseReader:    &network.RealResponseReader{},
-			ResponseValidator: &network.RealResponseValidator{},
-			NetworkTransport:  &network.RealTransportCreator{},
-		},
+		ApiVersion:   "v1.0.0",
+		SocketType:   st,
+		SocketClient: sc,
 	}
 }
 
@@ -67,16 +59,22 @@ func (pd *PodmanClient) ChangeApiVersion() error {
 }
 
 func (pd *PodmanClient) Send(method, endpoint string, body any) ([]byte, error) {
+	type serializer interface {
+		SerializePayload(payload any) (io.Reader, error)
+	}
+
 	var serializedBody io.Reader
 	var err error
 	if body != nil {
-		serializedBody, err = pd.socketClient.Serializer.SerializePayload(body)
-		if err != nil {
-			return nil, err
+		if s, ok := pd.SocketClient.(serializer); ok {
+			serializedBody, err = s.SerializePayload(body)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
 	url := fmt.Sprintf("%s%s", pd.ApiVersion, endpoint)
 
-	return pd.socketClient.Send(method, url, serializedBody)
+	return pd.SocketClient.Send(method, url, serializedBody, pd.SocketType)
 }
