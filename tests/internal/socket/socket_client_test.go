@@ -25,10 +25,9 @@ func TestSocketClient_Send_Success(t *testing.T) {
 				Body:       io.NopCloser(bytes.NewBufferString(string(expectedBody))),
 			},
 		},
-		socket.Rootless,
 	)
 
-	body, err := client.Send("GET", "/containers/json", nil)
+	body, err := client.Send("GET", "/containers/json", nil, socket.Rootless)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -42,10 +41,9 @@ func TestSocketClient_Send_RequestBuildFails(t *testing.T) {
 		nil,
 		&MockRequestBuilder{Err: errors.New("boom")},
 		nil, nil, nil,
-		socket.Rootless,
 	)
 
-	_, err := client.Send("GET", "/fail", nil)
+	_, err := client.Send("GET", "/fail", nil, socket.Rootless)
 	if err == nil || err.Error() == "" {
 		t.Fatal("expected error, got nil")
 	}
@@ -58,10 +56,9 @@ func TestSocketClient_Send_RequestFails(t *testing.T) {
 		nil,
 		nil,
 		&MockTransport{Err: errors.New("connection refused")},
-		socket.Rootless,
 	)
 
-	_, err := client.Send("GET", "/fail", nil)
+	_, err := client.Send("GET", "/fail", nil, socket.Rootless)
 	if err == nil || err.Error() == "" {
 		t.Fatal("expected transport error, got nil")
 	}
@@ -79,10 +76,9 @@ func TestSocketClient_Send_ReadFails(t *testing.T) {
 				Body:       io.NopCloser(bytes.NewBufferString("ok")),
 			},
 		},
-		socket.Rootless,
 	)
 
-	_, err := client.Send("GET", "/", nil)
+	_, err := client.Send("GET", "/", nil, socket.Rootless)
 	if err == nil || err.Error() == "" {
 		t.Fatal("expected read error, got nil")
 	}
@@ -100,10 +96,9 @@ func TestSocketClient_Send_InvalidStatus(t *testing.T) {
 				Body:       io.NopCloser(bytes.NewBufferString("unauthorized")),
 			},
 		},
-		socket.Rootless,
 	)
 
-	_, err := client.Send("GET", "/", nil)
+	_, err := client.Send("GET", "/", nil, socket.Rootless)
 	if err == nil || err.Error() == "" {
 		t.Fatal("expected status validation error, got nil")
 	}
