@@ -20,10 +20,12 @@ func TestValidateStatus(t *testing.T) {
 		{"500 Server Error", 500, []byte("boom"), true},
 	}
 
+	statusValidator := network.RealResponseValidator{}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resp := &http.Response{StatusCode: tt.status}
-			err := network.ValidateStatus(resp, tt.body)
+			err := statusValidator.ValidateStatus(resp, tt.body)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ValidateStatus() error = %v, wantErr %v", err, tt.wantErr)
 			}

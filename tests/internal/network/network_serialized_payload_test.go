@@ -19,9 +19,11 @@ func TestSerializePayload(t *testing.T) {
 		{"Unsupported payload", make(chan int), "", true},
 	}
 
+	serializePayloader := network.RealPayloadSerializer{}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			reader, err := network.SerializePayload(tt.payload)
+			reader, err := serializePayloader.SerializePayload(tt.payload)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SerializePayload() error = %v, wantErr %v", err, tt.wantErr)
 			}

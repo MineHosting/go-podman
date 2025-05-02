@@ -30,10 +30,12 @@ func TestReadBody(t *testing.T) {
 		},
 	}
 
+	ResponseReader := network.RealResponseReader{}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resp := &http.Response{Body: tt.body}
-			data, err := network.ReadBody(resp)
+			data, err := ResponseReader.ReadBody(resp)
 			if (err != nil) != tt.shouldFail {
 				t.Errorf("ReadBody() error = %v, shouldFail = %v", err, tt.shouldFail)
 			}

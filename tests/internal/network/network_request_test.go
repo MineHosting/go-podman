@@ -22,9 +22,11 @@ func TestNewRequest(t *testing.T) {
 		{"Invalid URL", http.MethodGet, "://", nil, true},
 	}
 
+	requestBuilder := network.RealHTTPRequestBuilder{}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			req, err := network.NewRequest(tt.method, tt.url, tt.body)
+			req, err := requestBuilder.NewRequest(tt.method, tt.url, tt.body)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewRequest() error = %v, wantErr %v", err, tt.wantErr)
 			}
