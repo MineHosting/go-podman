@@ -18,7 +18,7 @@ type PodmanClient struct {
 
 func NewPodmanClient(st socket.SocketPath, sc socket.SocketClientInterface) *PodmanClient {
 	return &PodmanClient{
-		ApiVersion:   "v1.0.0",
+		ApiVersion:   "v1.0.0/",
 		SocketType:   st,
 		SocketClient: sc,
 	}
