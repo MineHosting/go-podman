@@ -3,6 +3,7 @@ package socket
 
 import (
 	"fmt"
+	"os"
 	"os/user"
 )
 
@@ -10,16 +11,15 @@ type SocketPath string
 
 var (
 	Rootfull SocketPath = "/run/podman/io.podman/podman.sock"
-	Rootless SocketPath
+	Rootless SocketPath = GetRootlessPath()
 )
 
-func GetRootlessPath() error {
+func GetRootlessPath() SocketPath {
 	CollectUser, err := user.Current()
 	if err != nil {
-		return fmt.Errorf("[GetRootlessPath]: Can't get info about user: %w", err)
+		fmt.Printf("[GetRootlessPath]: Can't get info about user: %v", err)
+		os.Exit(1)
 	}
 
-	Rootless = SocketPath(fmt.Sprintf("/run/user/%s/podman/podman.sock", CollectUser.Uid))
-
-	return nil
+	return SocketPath(fmt.Sprintf("/run/user/%s/podman/podman.sock", CollectUser.Uid))
 }
