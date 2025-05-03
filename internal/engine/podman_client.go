@@ -74,7 +74,6 @@ func (pd *PodmanClient) Send(method, endpoint string, body any) ([]byte, error) 
 		}
 	}
 
-	url := fmt.Sprintf("%s%s", pd.ApiVersion, endpoint)
-
+	url := fmt.Sprintf("/%s%s", pd.ApiVersion, endpoint)
 	return pd.SocketClient.Send(method, url, serializedBody, pd.SocketType)
 }
