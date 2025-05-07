@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 
 	"github.com/MineHosting/go-podman/internal/socket"
 )
@@ -76,4 +77,23 @@ func (pd *PodmanClient) Send(method, endpoint string, body any) ([]byte, error) 
 
 	url := fmt.Sprintf("/%s%s", pd.ApiVersion, endpoint)
 	return pd.SocketClient.Send(method, url, serializedBody, pd.SocketType)
+}
+
+func (pd *PodmanClient) RawSend(method, endpoint string, body io.Reader, socket socket.SocketPath) (*http.Request, error) {
+	url := fmt.Sprintf("http://d%s%s", pd.ApiVersion, endpoint)
+
+	reqBuilder, ok := pd.SocketClient.(interface {
+		NewRequest(method, url string, body io.Reader) (*http.Request, error)
+	})
+
+	if !ok {
+		return nil, fmt.Errorf("[Engine]: SocketClient does not implement request builder")
+	}
+
+	req, err := reqBuilder.NewRequest(method, url, body)
+	if err != nil {
+		return nil, fmt.Errorf("[Engine]: failed to build raw request: %w", err)
+	}
+
+	return req, nil
 }
