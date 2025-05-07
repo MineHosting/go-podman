@@ -8,7 +8,7 @@ import (
 	"github.com/MineHosting/go-podman/pkg/engine"
 )
 
-func List_Containers(pd engine.Client) ([]Container, error) {
+func ListContainers(pd engine.Client) ([]Container, error) {
 	data, err := pd.Send("GET", "/libpod/containers/json", nil)
 	if err != nil {
 		return nil, err
