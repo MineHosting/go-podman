@@ -4,7 +4,7 @@
 
 ## What Is This
 
-`go-podman` is *not* trying to reinvent the wheel or emulate the Docker SDK.
+`go-podman` is _not_ trying to reinvent the wheel or emulate the Docker SDK.
 
 It's a focused, modular interface to **interact with Podman's HTTP API** using Go - and nothing more.
 
@@ -29,7 +29,7 @@ Right now, we offer basic Podman interaction, and you're welcome to extend it as
 
 This project is modular and designed to evolve, so if you're looking to dig deeper into how it works or expand it for your needs, check out our detailed docs:
 
-[Docs/What_Is_Go_Podman](https://github.com/MineHosting/go-podman/blob/main/docs/What_Is_Go_Podman.md)
+[Docs/What Is Go Podman](https://github.com/MineHosting/go-podman/blob/main/docs/What_Is_Go_Podman.md)
 
 ## Contributing
 
