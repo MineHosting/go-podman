@@ -1,59 +1,27 @@
 // Go-podman/tests/internal/engine/engine_helper_test.go
 package engine_test
 
-import (
-	"io"
-	"net/http"
-)
+import "github.com/stretchr/testify/mock"
 
-type MockSerializer struct {
-	Serialized io.Reader
-	Err        error
+type MockPodmanClient struct {
+	mock.Mock
 }
 
-func (m *MockSerializer) SerializePayload(payload any) (io.Reader, error) {
-	return m.Serialized, m.Err
+func (m *MockPodmanClient) StartPodman() error {
+	args := m.Called()
+	return args.Error(0)
 }
 
-type MockRequestBuilder struct {
-	Request *http.Request
-	Err     error
+type MockSocketClient struct {
+	mock.Mock
 }
 
-func (m *MockRequestBuilder) NewRequest(method, url string, body io.Reader) (*http.Request, error) {
-	return m.Request, m.Err
+func (m *MockSocketClient) Connect() error {
+	args := m.Called()
+	return args.Error(0)
 }
 
-type MockResponseReader struct {
-	Body []byte
-	Err  error
-}
-
-func (m *MockResponseReader) ReadBody(resp *http.Response) ([]byte, error) {
-	return m.Body, m.Err
-}
-
-type MockResponseValidator struct {
-	Err error
-}
-
-func (m *MockResponseValidator) ValidateStatus(resp *http.Response, body []byte) error {
-	return m.Err
-}
-
-type MockTransport struct {
-	Response *http.Response
-	Err      error
-}
-
-func (m *MockTransport) NewUnixTransport(_ string) http.RoundTripper {
-	return roundTripperFunc(func(req *http.Request) (*http.Response, error) {
-		return m.Response, m.Err
-	})
-}
-
-type roundTripperFunc func(req *http.Request) (*http.Response, error)
-
-func (f roundTripperFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req)
+func (m *MockSocketClient) SendRequest(request string) (string, error) {
+	args := m.Called(request)
+	return args.String(0), args.Error(1)
 }

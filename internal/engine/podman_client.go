@@ -18,7 +18,7 @@ type PodmanClient struct {
 
 func NewPodmanClient(st socket.SocketPath, sc socket.SocketClientInterface) *PodmanClient {
 	return &PodmanClient{
-		ApiVersion:   "v1.0.0",
+		ApiVersion:   "v1.0.0/",
 		SocketType:   st,
 		SocketClient: sc,
 	}
@@ -74,7 +74,6 @@ func (pd *PodmanClient) Send(method, endpoint string, body any) ([]byte, error) 
 		}
 	}
 
-	url := fmt.Sprintf("%s%s", pd.ApiVersion, endpoint)
-
+	url := fmt.Sprintf("/%s%s", pd.ApiVersion, endpoint)
 	return pd.SocketClient.Send(method, url, serializedBody, pd.SocketType)
 }

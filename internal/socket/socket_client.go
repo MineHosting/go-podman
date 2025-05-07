@@ -30,7 +30,7 @@ func NewSocketClient(Serializer network.PayloadSerializer, Request network.HTTPR
 }
 
 func (SC *SocketClient) Send(method, url string, body io.Reader, socket SocketPath) ([]byte, error) {
-	injectedUrl := fmt.Sprintf("http://d/%s", url)
+	injectedUrl := fmt.Sprintf("http://d%s", url)
 	req, err := SC.RequestBuilder.NewRequest(method, injectedUrl, body)
 	if err != nil {
 		return nil, fmt.Errorf("[SocketClient]: failed to build request: %w", err)

@@ -1,14 +1,14 @@
-# Go Podman
+# Go-Podman
 
-**Go-Podman** is a *programmatic container manager* written in Go, designed to interact directly with the Podman API via Unix sockets.
+**Go-Podman** is a _programmatic container manager_ written in Go, designed to interact directly with the Podman API via Unix sockets.
 
-It embraces the Unix Philosophy: *do one thing and do it well* - enabling you to build precise, composable tooling around container management.
+It embraces the Unix Philosophy: _do one thing and do it well_ - enabling you to build precise, composable tooling around container management.
 
 ---
 
 ## What It Does
 
-Go Podman acts as a minimal abstraction layer over Podman's REST API, allowing developers to:
+Go-Podman acts as a minimal abstraction layer over Podman's REST API, allowing developers to:
 
 - **Manage containers in code**, without relying on CLI tools or shell scripts.
 - **Automate complex workflows**, turning infrastructure logic into reproducible and testable Go functions.
@@ -22,7 +22,7 @@ This project is guided by the following principles:
 
 - **Simplicity** - Keep it small, composable, and easy to understand.
 - **Modularity** - Each component is isolated and follows the Single Responsibility Principle
-- **Extensibility** -  You can use individual building blocks or combine them for more complex solutions
+- **Extensibility** - You can use individual building blocks or combine them for more complex solutions
 
 ---
 
@@ -34,8 +34,8 @@ This project is guided by the following principles:
 - Replace brittle shell scripts with go-based, unit-testable logic
 
 - **Reactive infrastructure scenarios**
-Trigger container lifecycles in response to events - such as webhooks, queue messages ...
-Perfect for building lightweight Function-as-a-Service (FaaS) systems, dev enviroments on-demand, or self-healing services without Kubernetes overhead.
+  Trigger container lifecycles in response to events - such as webhooks, queue messages ...
+  Perfect for building lightweight Function-as-a-Service (FaaS) systems, dev enviroments on-demand, or self-healing services without Kubernetes overhead.
 
 ## Disclaimer
 

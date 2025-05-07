@@ -2,6 +2,8 @@
 package engine
 
 import (
+	"log"
+
 	"github.com/MineHosting/go-podman/internal/network"
 	"github.com/MineHosting/go-podman/internal/socket"
 )
@@ -29,11 +31,25 @@ func start_rootfull_client(sc socket.SocketClientInterface) (*PodmanClient, erro
 }
 
 func Start(is_rootless bool) (Client, error) {
+	var client *PodmanClient
+	var err error
+
 	socketClient := socket.NewSocketClient(&network.RealPayloadSerializer{}, &network.RealHTTPRequestBuilder{}, &network.RealResponseReader{}, &network.RealResponseValidator{}, &network.RealTransportCreator{})
 
 	if is_rootless {
-		return start_rootless_client(socketClient)
+		client, err = start_rootless_client(socketClient)
+	} else {
+		client, err = start_rootfull_client(socketClient)
 	}
 
-	return start_rootfull_client(socketClient)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = Ping(client)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return client, err
 }
