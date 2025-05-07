@@ -3,7 +3,7 @@ package engine
 
 import "fmt"
 
-func Ping(pd *PodmanClient) error {
+func Ping(pd Client) error {
 	resp, err := pd.Send("GET", "libpod/_ping", nil)
 	if err != nil {
 		return fmt.Errorf("failed to ping Podman: %w", err)
