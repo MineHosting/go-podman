@@ -9,7 +9,7 @@ import "github.com/MineHosting/go-podman/internal/engine"
 // - isRootlessMode: A boolean indicating whether the client should be initialized in rootless mode (true) or not (false).
 //
 // ## Returns:
-// - engine.Client: The initialized Podman client, implementing the Client interface.
+// - Client: The initialized Podman client, implementing the Client interface.
 // - error: Returns an error if client initialization or the ping test fails.
 //
 // ## Example usage:
@@ -21,7 +21,7 @@ import "github.com/MineHosting/go-podman/internal/engine"
 //
 // ## Notes:
 // This function also performs a ping test on the client after initialization to ensure it is functional before being returned.
-func CreateNewClient(isRootlessMode bool) (engine.Client, error) {
+func CreateNewClient(isRootlessMode bool) (Client, error) {
 	client, err := engine.Start(isRootlessMode)
 	if err != nil {
 		return nil, err
