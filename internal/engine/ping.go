@@ -10,7 +10,7 @@ func Ping(pd *PodmanClient) error {
 	}
 
 	if string(resp) != "OK" {
-		return fmt.Errorf("unexpected ping response: %w", err)
+		return fmt.Errorf("unexpected ping response: %s", string(resp))
 	}
 
 	return nil
